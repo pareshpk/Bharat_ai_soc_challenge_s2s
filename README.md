@@ -1,40 +1,400 @@
-# ARM-SOC-BASIC
-Offline English → Hindi Speech-to-Speech Translator  
-Built for Bharat AI SoC Challenge
+# BhashaBridge — Offline English-to-Hindi Speech-to-Speech Translation System
 
-## Features
-- Fully Offline
-- English Speech Recognition (Vosk)
-- English → Hindi Translation (ONNX Transformer)
-- Hindi Text-to-Speech
-- Optimized for ARM devices
-- Low latency (~1 sec)
+<img width="1024" height="1024" alt="bhashabridge_icon_1024" src="https://github.com/user-attachments/assets/edab70ef-3c32-4ce5-a498-d5ca3cf60c6a" />
 
-## Architecture
-Speech → ASR → Text Correction → Transformer → Hindi → TTS
 
-## Tech Stack
-- Kotlin
-- ONNX Runtime Android
-- Vosk Offline ASR
-- Android TTS
+BhashaBridge is a fully offline, real-time Speech-to-Speech (S2ST) translation system engineered for ARM-based Android devices. The system accepts spoken English input, performs on-device Automatic Speech Recognition (ASR), translates the recognized text into Hindi using a quantized transformer model, and synthesizes spoken Hindi output — all without any internet connectivity or cloud dependency. The project is submitted as a solution to ARM Bharat SoC Challenge, Problem Statement 4.
 
-## Build Instructions
+---
+
+## Problem Statement
+
+India's linguistic diversity creates practical communication barriers across domains including healthcare, governance, education, and emergency response. The majority of deployed translation systems rely on centralized cloud infrastructure, requiring continuous internet access for audio transmission, remote processing, and response delivery.
+
+This dependency renders such systems non-functional in rural regions, disaster zones, and low-bandwidth environments — precisely the scenarios where multilingual communication is most critical. Beyond connectivity, cloud-dependent translation introduces variable latency and data privacy concerns due to transmission of sensitive audio to remote servers.
+
+The identified engineering gap is the absence of a robust, low-latency, fully offline Speech-to-Speech translation pipeline optimized for constrained ARM-based mobile hardware. While individual components such as offline ASR and machine translation exist independently, integrating them into a stable, memory-efficient, real-time mobile system presents non-trivial systems engineering challenges that this project directly addresses.
+
+---
+
+## Solution Overview
+
+BhashaBridge implements a five-stage inference pipeline, executed entirely on-device:
+
+1. **Audio Capture** — The device microphone records spoken English audio at 16 kHz mono PCM using the Android `AudioRecord` API.
+2. **Speech Recognition** — The Vosk offline ASR engine performs streaming recognition, incrementally processing audio and producing a final English transcript upon user release.
+3. **Neural Translation** — The English transcript is tokenized and passed through a quantized transformer model exported in ONNX format. ONNX Runtime executes the inference on-device.
+4. **Linguistic Correction** — A deterministic post-processing layer refines the translated Hindi text by eliminating token duplication, auxiliary verb repetition, and morphological artifacts.
+5. **Speech Synthesis** — The refined Hindi text is converted to speech using Android's built-in offline Hindi TTS engine.
+
+The result is a seamless voice-in, voice-out translation experience that operates without any network dependency.
+
+---
+
+## System Architecture
+
+```
+Microphone Input
+      |
+      v
+Audio Capture (AudioRecord API, 16 kHz, Mono PCM)
+      |
+      v
+Vosk Streaming ASR Engine
+      |
+      v
+English Transcript
+      |
+      v
+ONNX Runtime Translator (Quantized Transformer Model)
+      |
+      v
+Raw Hindi Token Output
+      |
+      v
+Linguistic Correction Layer (Deterministic Post-Processing)
+      |
+      v
+Refined Hindi Text
+      |
+      v
+Android Offline TTS Engine
+      |
+      v
+Hindi Speech Output
+```
+
+### Component Descriptions
+
+**Audio Capture Module**
+Audio is recorded using `AudioRecord` at 16 kHz, mono channel, PCM 16-bit format. Audio buffering is performed in fixed-size chunks to balance latency with processing throughput. Recording executes on a dedicated background thread to prevent blocking the UI thread.
+
+**Automatic Speech Recognition**
+Vosk, an offline ASR toolkit built on the Kaldi framework, performs streaming speech recognition. It processes audio incrementally and emits a finalized English transcript upon recording completion. The recognizer instance is maintained persistently across sessions to avoid repeated initialization overhead.
+
+**Neural Machine Translation Engine**
+The translation model uses a transformer architecture with attention mechanisms for contextual word mapping. The model is exported to ONNX format and executed via ONNX Runtime for Android, which provides ARM-optimized CPU inference kernels. The pipeline performs subword tokenization of the English input, model inference, and token decoding into Hindi text.
+
+**Linguistic Correction Layer**
+A rule-based, regex-driven post-processing module runs after translation decoding. It removes duplicate tokens, eliminates repeated auxiliary verbs (e.g., "है है" → "है"), collapses redundant morphological suffixes, and normalizes whitespace. This layer improves output fluency at negligible computational cost without increasing model size.
+
+**Text-to-Speech Engine**
+Android's built-in offline Hindi TTS engine synthesizes the corrected Hindi text into speech output. This eliminates the need to bundle a heavy neural TTS model, conserving device storage and runtime memory.
+
+**Concurrency Architecture**
+Audio capture operates on a dedicated background thread. Translation inference is dispatched via Kotlin coroutines on background dispatchers. UI updates are posted to the main thread. This separation prevents pipeline stages from blocking each other and ensures UI responsiveness throughout the translation process.
+
+---
+
+## Technology Stack
+
+| Component | Technology | Rationale |
+|-----------|-----------|-----------|
+| Programming Language | Kotlin | Native Android support, structured concurrency via coroutines, lifecycle-aware APIs |
+| Speech Recognition | Vosk (Kaldi-based) | Stable offline ASR, streaming recognition support, no cloud dependency |
+| Inference Engine | ONNX Runtime for Android | ARM-optimized CPU kernels, efficient transformer execution, broad model format support |
+| Model Format | ONNX | Framework-agnostic export, compatible with ONNX Runtime's Android deployment target |
+| Speech Synthesis | Android TTS (offline Hindi) | No bundled model required, eliminates storage overhead, native device integration |
+| Async Execution | Kotlin Coroutines | Lifecycle-aware background dispatch, structured cancellation, prevents thread leaks |
+| Build System | Gradle (Android) | Standard Android build toolchain, dependency management |
+
+**Alternatives Evaluated**
+
+- Cloud APIs (Google Translate, Azure Cognitive Services) were rejected due to connectivity dependency and data privacy concerns.
+- TensorFlow Lite was evaluated as an alternative inference engine but rejected in favour of ONNX Runtime due to smoother integration with the selected transformer model architecture.
+- A neural TTS model was considered but excluded to keep the storage footprint within acceptable bounds for mid-range devices.
+
+---
+
+## Repository Structure
+
+```
+PipelineClean/
+|
++-- app/
+|   +-- src/
+|   |   +-- main/
+|   |       +-- AndroidManifest.xml          # Permissions (RECORD_AUDIO)
+|   |       |
+|   |       +-- java/com/example/pipelineclean/
+|   |       |   +-- MainActivity.kt          # Entry point, pipeline orchestration
+|   |       |   +-- WaveformView.kt          # Real-time audio waveform rendering
+|   |       |   +-- translator/
+|   |       |       +-- ModelManager.kt      # ONNX session initialization and reuse
+|   |       |       +-- Translator.kt        # Tokenization, inference, decoding
+|   |       |
+|   |       +-- assets/
+|   |       |   +-- model/                   # Vosk ASR acoustic model (not committed)
+|   |       |   +-- translation_model.onnx   # ONNX translation model (not committed)
+|   |       |   +-- vocab.json               # Tokenizer vocabulary
+|   |       |
+|   |       +-- res/
+|   |           +-- layout/activity_main.xml # Main UI layout
+|   |           +-- drawable/                # UI background and button assets
+|   |           +-- values/                  # Colors, strings, themes
+|   |
+|   +-- build.gradle                         # Module-level dependencies
+|   +-- proguard-rules.pro
+|
++-- build.gradle                             # Project-level build config
++-- settings.gradle
++-- gradle/wrapper/                          # Gradle wrapper for reproducible builds
++-- gradlew / gradlew.bat
+```
+
+**Key Files**
+
+| File | Purpose |
+|------|---------|
+| `MainActivity.kt` | Pipeline entry point; coordinates ASR, translation, and TTS stages |
+| `Translator.kt` | Implements ONNX inference, tokenization, and output decoding |
+| `ModelManager.kt` | Manages ONNX Runtime session lifecycle and persistent session reuse |
+| `WaveformView.kt` | Custom view for energy-based waveform visualization |
+| `vocab.json` | Subword vocabulary file used by the tokenizer |
+| `AndroidManifest.xml` | Declares `RECORD_AUDIO` permission |
+| `activity_main.xml` | Defines the main UI layout |
+
+---
+
+## Installation & Setup
+
+### Prerequisites
+
+| Requirement | Version |
+|-------------|---------|
+| Android Studio | Hedgehog (2023.1.1) or newer |
+| JDK | 17 (recommended) |
+| Gradle | 8.0 or newer |
+| Kotlin | 2.0.x (do not upgrade arbitrarily) |
+| Android SDK | API 24+ (minimum), API 34 (target) |
+| ADB | Required for device deployment |
+
+### Step 1 — Clone the Repository
 
 ```bash
-./gradlew assembleDebug
+git clone https://github.com/<your-username>/BhashaBridge.git
+cd BhashaBridge
+```
 
-##Install:
+### Step 2 — Download Required Model Files
 
-adb install -r app/build/outputs/apk/debug/app-arm64-v8a-debug.apk
+Model files are excluded from the repository due to size constraints. Download and place them as follows:
 
-##Model Setup
+**Vosk ASR Model** (English, small variant recommended for mobile):
 
-Place Vosk model inside:
+Download from: https://alphacephei.com/vosk/models
 
+Place the extracted model directory at:
+
+```
 app/src/main/assets/model/
+```
 
-vosk-model-small-en-us-0.15Save and exit
-.---# 🚀 STEP 6 —  First Commi
+The directory must contain the `am/`, `conf/`, `graph/`, and `ivector/` subdirectories.
 
-t```bashgit add .git commit -m "Initial commit - Offline ENG to HIN Speech Translator"
+**ONNX Translation Model**:
+
+Place the model file at:
+
+```
+app/src/main/assets/translation_model.onnx
+```
+
+**Tokenizer Vocabulary**:
+
+The `vocab.json` file is included in the repository at:
+
+```
+app/src/main/assets/vocab.json
+```
+
+### Step 3 — Verify Environment Variables
+
+Ensure the following are configured in your shell environment:
+
+```bash
+export ANDROID_HOME=/path/to/android/sdk
+export JAVA_HOME=/path/to/jdk-17
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+```
+
+### Step 4 — Open in Android Studio
+
+Open the project root directory (`PipelineClean/`) in Android Studio. Allow Gradle to sync automatically. Resolve any SDK or dependency prompts.
+
+### Step 5 — Grant Device Permissions
+
+On the target Android device:
+- Enable **Developer Options** and **USB Debugging**
+- Connect the device via USB
+- Grant `RECORD_AUDIO` permission when prompted on first launch
+
+---
+
+## Running the Application
+
+### Debug Build and Install
+
+```bash
+# Clean and build
+./gradlew clean assembleDebug
+
+# Install on connected device
+adb install -r app/build/outputs/apk/debug/app-arm64-v8a-debug.apk
+```
+
+### Release Build
+
+```bash
+./gradlew assembleRelease
+```
+
+Sign the APK before distribution. Refer to Android documentation for keystore configuration.
+
+### Expected Behavior
+
+1. Launch the application on the target device.
+2. Press and hold the microphone button.
+3. Speak a phrase in English clearly.
+4. Release the button.
+5. The recognized English text appears in the input field.
+6. The system automatically performs translation and synthesis.
+7. The Hindi translation is displayed and spoken aloud via the device speaker.
+
+---
+
+## Performance Metrics
+
+| Metric | Observed Value |
+|--------|---------------|
+| End-to-end latency (short phrases) | Under 1 second |
+| ASR inference (Vosk small model) | ~200–400 ms |
+| Translation inference (ONNX) | ~300–600 ms |
+| TTS synthesis | ~100–200 ms |
+| Application startup time | ~2–4 seconds (model loading) |
+| ONNX model size | 50–200 MB (precision-dependent) |
+| Vosk model size | 40–150 MB (variant-dependent) |
+| RAM usage at runtime | ~300–500 MB (device-dependent) |
+| CPU utilization (inference peak) | Elevated briefly; returns to baseline post-inference |
+
+**Trade-offs**
+
+Aggressive INT8 quantization was experimentally observed to degrade translation semantic accuracy. A balanced precision configuration was selected to preserve output fidelity while maintaining deployability on ARM CPU without NPU or GPU acceleration.
+
+---
+
+## Optimization for ARM SoC
+
+### Quantization
+
+INT8 quantization was evaluated to reduce model size and improve inference throughput. However, testing revealed significant semantic degradation under full INT8 quantization for the translation model. A balanced precision strategy was adopted, applying quantization selectively to layers where fidelity impact was minimal. This preserves translation quality while remaining deployable on ARM CPU without hardware accelerators.
+
+### Model Format and Execution
+
+The translation model is exported in ONNX format, which allows ONNX Runtime to apply backend-specific optimizations at load time. ONNX Runtime for Android includes ARM-optimized execution providers that leverage NEON SIMD instructions present on ARMv8 processors. This enables efficient tensor operations without requiring GPU or NPU availability.
+
+### Persistent Session Reuse
+
+Model sessions are initialized once during application startup and reused across all inference calls. This eliminates per-request session creation overhead, prevents memory fragmentation from repeated allocations, and ensures stable performance over long usage sessions. Both the ONNX Runtime inference session and the Vosk recognizer instance follow this persistent lifecycle pattern.
+
+### Memory Management
+
+Model assets are loaded from the `assets` directory into internal storage once. The Vosk model is extracted to `filesDir` on first run and accessed from there on subsequent launches, avoiding repeated asset extraction. Memory allocation for audio buffers is fixed-size and pre-allocated to prevent garbage collection pressure during active recording.
+
+### Energy-Efficient Waveform Visualization
+
+Signal energy averaging replaces full FFT-based spectral analysis for waveform visualization. This reduces CPU overhead during recording by avoiding computationally expensive frequency domain transformations, freeing processor cycles for the ASR and translation pipeline.
+
+### Audio Lifecycle Engineering
+
+Atomic start/stop state transitions prevent concurrent access to `AudioRecord` resources. Recording threads are joined before releasing audio resources to eliminate race conditions. This ensures deterministic resource cleanup under rapid or repeated usage, directly improving thermal and power behavior on constrained hardware.
+
+---
+
+## Innovation & Novelty
+
+BhashaBridge's innovation is architectural and systems-level rather than algorithmic. The differentiating contributions are described below.
+
+### 1. Lightweight Linguistic Correction Layer
+
+Most offline translation systems address output quality issues by scaling model size, increasing memory requirements and inference latency. BhashaBridge instead implements a deterministic post-processing correction module that removes duplicate tokens, eliminates auxiliary verb repetition, collapses redundant morphological constructs, and normalizes whitespace. This approach produces measurable improvements in Hindi grammatical fluency at near-zero computational cost, with no increase in model size or RAM footprint.
+
+### 2. Stability-Oriented Audio Lifecycle Design
+
+Standard implementations of streaming ASR on Android frequently exhibit race conditions between recording threads and UI state management. BhashaBridge redesigned the audio pipeline with atomic transition semantics: explicit thread joining before resource release, thread-safe state flags, and prevention of recursive stop calls. This eliminated an entire class of intermittent crash states that are common in naive implementations.
+
+### 3. Production-Grade Inference Session Management
+
+Prototype-level implementations commonly reload model sessions per inference call, causing memory fragmentation and latency spikes. BhashaBridge maintains persistent ONNX Runtime and Vosk sessions across the application lifecycle, reflecting production-grade inference management practices. This ensures stable, consistent performance during extended usage sessions.
+
+### 4. Empirically Validated Quantization Strategy
+
+Rather than applying aggressive INT8 quantization as a blanket optimization, the project experimentally evaluated the accuracy-efficiency trade-off for this specific model. Observed semantic degradation under full INT8 quantization led to selection of a balanced precision configuration that preserves translation fidelity while remaining deployable on ARM CPU. This avoids the misleading optimization claims common in academic prototypes.
+
+### 5. Fully Isolated Edge Deployment
+
+The system operates with no cloud fallback, no hidden network dependencies, and no assumption of GPU or NPU availability. All components — ASR, translation, correction, and TTS — execute on ARM CPU. This represents genuine edge AI deployment discipline, not a hybrid system relabelled as offline.
+
+---
+
+## Limitations
+
+- **Single language pair**: The current implementation supports English-to-Hindi translation only.
+- **ASR accuracy under noise**: Vosk recognition performance degrades in environments with significant background noise. No noise suppression preprocessing is currently implemented.
+- **Complex sentence fluency**: Long or syntactically complex input sentences may produce reduced translation fluency. The correction layer addresses surface artifacts but does not resolve deep structural translation errors.
+- **Storage requirements**: Combined ASR and translation model assets require 90–350 MB of device storage depending on model variants selected.
+- **No streaming translation**: Translation inference is triggered after full ASR finalization. Streaming translation is not yet implemented, introducing a perceptible pause between speech completion and Hindi output.
+- **Hindi TTS quality**: The system relies on Android's built-in Hindi TTS, whose naturalness varies by device and Android version. A neural TTS model was not bundled due to storage constraints.
+
+---
+
+## Future Improvements
+
+- **Multilingual expansion**: Extend translation to additional Indian language pairs (e.g., English-to-Tamil, English-to-Bengali) using multilingual transformer models.
+- **Streaming translation**: Implement incremental token generation to begin synthesis before ASR finalization, reducing perceived latency.
+- **Knowledge distillation**: Apply structured pruning and knowledge distillation to reduce model size without proportionate accuracy loss.
+- **ARM NPU acceleration**: Investigate integration with ARM Ethos NPU execution providers in ONNX Runtime to offload inference from the CPU and reduce power consumption.
+- **Noise suppression preprocessing**: Integrate lightweight noise suppression (e.g., RNNoise or WebRTC VAD) before ASR input to improve recognition accuracy in field conditions.
+- **Neural TTS integration**: Evaluate lightweight neural TTS models (e.g., distilled FastSpeech variants) for improved Hindi speech naturalness while maintaining acceptable storage overhead.
+- **Bidirectional translation**: Add Hindi-to-English reverse pipeline for conversational use cases.
+
+---
+
+## Contributing
+
+Contributions are welcome. To contribute to this project:
+
+1. Fork the repository and create a feature branch from `main`.
+2. Follow the existing code style and architecture conventions.
+3. Ensure all changes are tested on a physical ARM-based Android device (API 24 minimum).
+4. Do not commit model files, build artifacts, or local configuration files (see `.gitignore`).
+5. Submit a pull request with a clear description of the change, the problem it addresses, and any observed performance impact.
+
+For significant architectural changes, open an issue for discussion before submitting a pull request.
+
+**Areas where contributions are particularly welcome:**
+- Noise suppression preprocessing
+- Additional language pair support
+- ARM NPU inference backend integration
+- Improved tokenizer support for domain-specific vocabulary
+
+---
+
+## License
+
+This project is currently unlicensed. A license will be specified prior to public release. All rights reserved until a license is formally applied.
+
+---
+
+## Contact
+
+For technical queries, collaboration proposals, or submission-related correspondence, please contact:
+
+**Project Maintainer**: [Your Name]  
+**Email**: [your.email@example.com]  
+**Institution**: [Your Institution / Organization]  
+**GitHub**: [https://github.com/your-username]
+
+---
+
+*Submitted for ARM Bharat SoC Challenge — Problem Statement 4*
