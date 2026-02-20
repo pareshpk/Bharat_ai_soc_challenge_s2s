@@ -175,7 +175,7 @@ PipelineClean/
 ### Step 1 — Clone the Repository
 
 ```bash
-git clone https://github.com/<your-username>/BhashaBridge.git
+git clone https://github.com/<pareshpk>/BhashaBridge.git
 cd BhashaBridge
 ```
 
@@ -518,3 +518,6 @@ For technical queries, collaboration proposals, or submission-related correspond
 ---
 
 *Submitted for ARM Bharat SoC Challenge — Problem Statement 4*
+
+
+
