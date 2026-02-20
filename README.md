@@ -1,6 +1,6 @@
 # BhashaBridge — Offline English-to-Hindi Speech-to-Speech Translation System
 
-<img width="1024" height="1024" alt="bhashabridge_icon_1024" src="https://github.com/user-attachments/assets/edab70ef-3c32-4ce5-a498-d5ca3cf60c6a" />
+<img width="1024" height="1024" alt="bhashabridge_icon_1024" src="https://github.com/user-attachments/assets/498083d0-a510-4bc7-848e-5aaf72410aa9" />
 
 
 BhashaBridge is a fully offline, real-time Speech-to-Speech (S2ST) translation system engineered for ARM-based Android devices. The system accepts spoken English input, performs on-device Automatic Speech Recognition (ASR), translates the recognized text into Hindi using a quantized transformer model, and synthesizes spoken Hindi output — all without any internet connectivity or cloud dependency. The project is submitted as a solution to ARM Bharat SoC Challenge, Problem Statement 4.
@@ -357,6 +357,109 @@ The system operates with no cloud fallback, no hidden network dependencies, and 
 - **Noise suppression preprocessing**: Integrate lightweight noise suppression (e.g., RNNoise or WebRTC VAD) before ASR input to improve recognition accuracy in field conditions.
 - **Neural TTS integration**: Evaluate lightweight neural TTS models (e.g., distilled FastSpeech variants) for improved Hindi speech naturalness while maintaining acceptable storage overhead.
 - **Bidirectional translation**: Add Hindi-to-English reverse pipeline for conversational use cases.
+
+---
+
+## Hindi TTS Setup — Required Device Configuration
+
+BhashaBridge uses Android's built-in Text-to-Speech engine for Hindi speech output. This engine is **not active by default** on most Android devices. Both users and evaluators must complete the following one-time setup before the application can produce spoken Hindi output.
+
+> **This step is mandatory. If the Hindi TTS voice is not installed and enabled, the application will either produce no audio output or fall back to a non-Hindi voice.**
+
+---
+
+### Step 1 — Install a Hindi TTS Voice Pack
+
+Android's TTS engine requires a language-specific voice pack to be downloaded before use. The process is the same on stock Android and most manufacturer skins (Samsung One UI, Xiaomi MIUI, Realme UI, etc.), though menu labels may vary slightly.
+
+**On Stock Android (Google TTS Engine):**
+
+1. Open **Settings** on your device.
+2. Navigate to **General Management** → **Language and Input** → **Text-to-Speech Output**.
+   - On some devices: **Settings** → **Accessibility** → **Text-to-Speech Output**.
+3. Ensure **Google Text-to-Speech Engine** is selected as the preferred engine.
+4. Tap the **Settings icon (gear icon)** next to Google Text-to-Speech Engine.
+5. Tap **Install voice data**.
+6. Locate **Hindi (India)** — `हिन्दी (भारत)` — in the language list.
+7. Tap the **Download icon** next to Hindi.
+8. Wait for the download to complete. An active internet connection is required for this one-time download only.
+9. Once installed, return to the previous screen.
+
+**On Samsung Devices (One UI):**
+
+1. Open **Settings** → **General Management** → **Language and Input**.
+2. Tap **Text-to-Speech**.
+3. Select **Samsung TTS** or **Google TTS** as the preferred engine (Google TTS is recommended for Hindi support).
+4. Follow steps 4–9 above for Google TTS voice installation.
+
+**On Xiaomi / Redmi Devices (MIUI):**
+
+1. Open **Settings** → **Additional Settings** → **Language & Input**.
+2. Tap **Text-to-Speech output**.
+3. Confirm **Google Text-to-Speech Engine** is selected.
+4. Follow steps 4–9 above.
+
+---
+
+### Step 2 — Set Hindi as the TTS Language and Enable Offline Mode
+
+After the voice pack is downloaded:
+
+1. Return to **Text-to-Speech Output** settings.
+2. Tap the **gear icon** next to Google Text-to-Speech Engine.
+3. Under **Language**, select **Hindi (India)**.
+4. Look for a **Download** or **Offline speech recognition** option and ensure the Hindi offline data is marked as installed.
+
+> On some Android versions, the offline voice pack is separate from the standard voice pack. If you see a prompt to download an offline version of Hindi, download it to ensure the TTS functions without an internet connection.
+
+---
+
+### Step 3 — Verify TTS is Functional
+
+To confirm Hindi TTS is working correctly before running BhashaBridge:
+
+1. In the **Text-to-Speech settings**, locate the **Listen to an example** or **Play** button.
+2. If the engine is set to Hindi, it should speak a sample sentence in Hindi.
+3. If you hear English or no output, confirm the language selection in Step 2 was saved correctly.
+
+Alternatively, you can verify via Android's accessibility settings:
+
+1. Go to **Settings** → **Accessibility** → **Text-to-Speech Output**.
+2. Confirm the language shown is **Hindi (India)**.
+3. Press the play/preview button to test.
+
+---
+
+### Step 4 — Configure Speech Rate and Pitch (Optional)
+
+BhashaBridge uses the system TTS defaults. If the speech output sounds too fast or unnatural:
+
+1. Go to **Text-to-Speech Output** settings.
+2. Adjust the **Speech Rate** slider (recommended: 0.8x–1.0x for Hindi).
+3. Adjust the **Pitch** slider if desired.
+
+These settings apply system-wide and will affect BhashaBridge's output.
+
+---
+
+### Troubleshooting
+
+| Symptom | Likely Cause | Resolution |
+|---------|-------------|------------|
+| No audio output after translation | Hindi TTS voice not installed | Complete Steps 1 and 2 above |
+| Output is in English, not Hindi | TTS language not set to Hindi | Set language to Hindi (India) in TTS engine settings |
+| TTS produces robotic or broken audio | Offline voice pack not downloaded | Download the offline Hindi voice pack (Step 2) |
+| App crashes on TTS call | TTS engine not initialized | Restart the device after completing TTS setup |
+| "Language not supported" error | Google TTS not selected as engine | Switch preferred engine to Google Text-to-Speech |
+
+---
+
+### Notes for Evaluators
+
+- The Hindi voice pack download requires an internet connection **once** during setup. After installation, TTS operates entirely offline.
+- The application itself performs all ASR and translation processing offline at all times. The TTS internet dependency is limited to the one-time voice pack installation.
+- If evaluating on an emulator, ensure the emulator image includes Google Play Services (required for Google TTS voice pack installation). API images without Google Play will not support voice pack download.
+- Minimum recommended Android version for stable Hindi TTS support: **Android 7.0 (API 24)**.
 
 ---
 
