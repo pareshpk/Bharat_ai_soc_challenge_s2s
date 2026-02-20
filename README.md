@@ -1,7 +1,7 @@
 # BhashaBridge — Offline English-to-Hindi Speech-to-Speech Translation System
 
+<img width="1024" height="1024" alt="bhashabridge_icon_1024" src="https://github.com/user-attachments/assets/2de68d40-d8ab-4cdc-9a7b-49b48ebf6a95" />
 
-![Uploading bhashabridge_icon_1024.png…]()
 
 
 BhashaBridge is a fully offline, real-time Speech-to-Speech (S2ST) translation system engineered for ARM-based Android devices. The system accepts spoken English input, performs on-device Automatic Speech Recognition (ASR), translates the recognized text into Hindi using a quantized transformer model, and synthesizes spoken Hindi output — all without any internet connectivity or cloud dependency. The project is submitted as a solution to ARM Bharat SoC Challenge, Problem Statement 4.
