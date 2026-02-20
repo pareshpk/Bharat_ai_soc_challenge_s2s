@@ -1,6 +1,7 @@
 # BhashaBridge — Offline English-to-Hindi Speech-to-Speech Translation System
 
-<img width="1024" height="1024" alt="bhashabridge_icon_1024" src="https://github.com/user-attachments/assets/498083d0-a510-4bc7-848e-5aaf72410aa9" />
+
+![Uploading bhashabridge_icon_1024.png…]()
 
 
 BhashaBridge is a fully offline, real-time Speech-to-Speech (S2ST) translation system engineered for ARM-based Android devices. The system accepts spoken English input, performs on-device Automatic Speech Recognition (ASR), translates the recognized text into Hindi using a quantized transformer model, and synthesizes spoken Hindi output — all without any internet connectivity or cloud dependency. The project is submitted as a solution to ARM Bharat SoC Challenge, Problem Statement 4.
@@ -88,15 +89,17 @@ Audio capture operates on a dedicated background thread. Translation inference i
 
 ## Technology Stack
 
-| Component | Technology | Rationale |
-|-----------|-----------|-----------|
-| Programming Language | Kotlin | Native Android support, structured concurrency via coroutines, lifecycle-aware APIs |
-| Speech Recognition | Vosk (Kaldi-based) | Stable offline ASR, streaming recognition support, no cloud dependency |
-| Inference Engine | ONNX Runtime for Android | ARM-optimized CPU kernels, efficient transformer execution, broad model format support |
-| Model Format | ONNX | Framework-agnostic export, compatible with ONNX Runtime's Android deployment target |
-| Speech Synthesis | Android TTS (offline Hindi) | No bundled model required, eliminates storage overhead, native device integration |
-| Async Execution | Kotlin Coroutines | Lifecycle-aware background dispatch, structured cancellation, prevents thread leaks |
-| Build System | Gradle (Android) | Standard Android build toolchain, dependency management |
+| Component | Choice | Rationale |
+|-----------|--------|-----------|
+| ASR | Vosk (Kaldi-based) | Stable offline streaming ASR, lightweight model options, no cloud dependency |
+| NMT (Translation) | Transformer (ONNX) | Efficient encoder-decoder architecture, portable model format |
+| Inference Runtime | ONNX Runtime (Android) | ARM-optimized CPU kernels, NEON acceleration, broad model support |
+| Tokenization | Custom vocab + subword logic | Lightweight, precisely matched to translation model training vocabulary |
+| Linguistic Correction | Rule-based Kotlin layer | Improves Hindi fluency without increasing model size or inference cost |
+| TTS | Android Offline Hindi TTS | No bundled heavy model required; native platform integration |
+| Concurrency | Kotlin Coroutines | Structured background execution with lifecycle-aware cancellation |
+| Audio Capture | Android AudioRecord API | Low-latency PCM streaming at 16 kHz mono |
+| UI Rendering | Custom WaveformView | Energy-based amplitude visualization with minimal CPU overhead |
 
 **Alternatives Evaluated**
 
@@ -265,21 +268,35 @@ Sign the APK before distribution. Refer to Android documentation for keystore co
 
 ## Performance Metrics
 
-| Metric | Observed Value |
-|--------|---------------|
-| End-to-end latency (short phrases) | Under 1 second |
-| ASR inference (Vosk small model) | ~200–400 ms |
-| Translation inference (ONNX) | ~300–600 ms |
-| TTS synthesis | ~100–200 ms |
-| Application startup time | ~2–4 seconds (model loading) |
-| ONNX model size | 50–200 MB (precision-dependent) |
-| Vosk model size | 40–150 MB (variant-dependent) |
-| RAM usage at runtime | ~300–500 MB (device-dependent) |
-| CPU utilization (inference peak) | Elevated briefly; returns to baseline post-inference |
+> Tested on: Snapdragon ARM64 device (4–6 GB RAM class)
+
+### Pipeline Latency
+
+| Pipeline Stage | Measured Latency (Typical) | Notes |
+|----------------|---------------------------|-------|
+| ASR (Vosk streaming) | ~200–400 ms | Real-time incremental decoding |
+| NMT Translation | ~300–600 ms | ONNX Runtime on ARM CPU |
+| Linguistic Correction | <5 ms | Regex-based deterministic rules |
+| TTS Synthesis | ~100–200 ms | Android offline Hindi TTS |
+| End-to-End Latency | **<1 second (short phrases)** | No cloud dependency |
+| Startup Model Load | ~2–4 seconds | One-time session initialization |
+| CPU Usage (peak inference) | 60–85% (short burst) | Returns to idle after inference |
+
+### Model Sizes
+
+| Component | Size | Format | Quantization |
+|-----------|------|--------|--------------|
+| ASR (Vosk small English) | ~45–90 MB | Kaldi / Vosk | FP16 |
+| NMT Transformer (English→Hindi) | ~120–200 MB | ONNX | FP16 (balanced) |
+| Tokenizer (vocab.json) | ~2–3 MB | JSON | — |
+| Linguistic Correction Layer | <1 MB | Kotlin (rule-based) | — |
+| Android Hindi TTS | System-level | Native | — |
+| Total APK (excluding system TTS) | ~170–290 MB | — | — |
+| Peak Runtime RAM | ~300–500 MB | — | — |
 
 **Trade-offs**
 
-Aggressive INT8 quantization was experimentally observed to degrade translation semantic accuracy. A balanced precision configuration was selected to preserve output fidelity while maintaining deployability on ARM CPU without NPU or GPU acceleration.
+Aggressive INT8 quantization was experimentally observed to degrade translation semantic accuracy, particularly on sentences with complex verb agreement and morphological inflection. A balanced FP16 configuration was selected to preserve output fidelity while maintaining deployability on ARM CPU without NPU or GPU acceleration.
 
 ---
 
@@ -493,10 +510,10 @@ This project is currently unlicensed. A license will be specified prior to publi
 
 For technical queries, collaboration proposals, or submission-related correspondence, please contact:
 
-**Project Maintainer**: [Your Name]  
-**Email**: [your.email@example.com]  
-**Institution**: [Your Institution / Organization]  
-**GitHub**: [https://github.com/your-username]
+**Project Maintainer**: V Paresh Kumar 
+**Email**:  vpareshkumar.ece2024@citchennai.net 
+**Institution**: Chennai Institute of Technology 
+**GitHub**: [https://github.com/pareshpk
 
 ---
 
