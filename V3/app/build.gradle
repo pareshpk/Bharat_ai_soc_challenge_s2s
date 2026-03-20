@@ -1,0 +1,100 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.example.bhashabridge_v3_4'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.example.bhashabridge_v3_4"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "3.4"
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    // ✅ Prevent native lib conflicts
+    packaging {
+        resources {
+            excludes += [
+                'META-INF/LICENSE.txt',
+                'META-INF/NOTICE.txt',
+                'META-INF/LICENSE',
+                'META-INF/NOTICE',
+                'META-INF/*.kotlin_module',
+                'META-INF/DEPENDENCIES'
+            ]
+        }
+        jniLibs {
+            pickFirsts += [
+                    "**/libonnxruntime.so",
+                    "**/libonnxruntime4j_jni.so",
+                    "**/libvosk.so",
+                    "**/libjnidispatch.so"
+            ]
+        }
+    }
+
+    // ✅ Prevent compression of ML / speech model files
+    aaptOptions {
+        noCompress "onnx"
+        noCompress "bin"
+        noCompress "pb"
+    }
+
+    // ✅ ABI split (smaller production APKs)
+    splits {
+        abi {
+            enable true
+            reset()
+            include "arm64-v8a", "armeabi-v7a"
+            universalApk false
+        }
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
+
+
+
+
+    // ONNX Runtime
+    implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.17.1'
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+
+    // Vosk Offline Speech
+    implementation 'com.alphacephei:vosk-android:0.3.47'
+    // MultiDex
+    implementation 'androidx.multidex:multidex:2.0.1'
+    // LanguageTool — real grammar engine
+}
+

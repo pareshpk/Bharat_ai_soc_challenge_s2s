@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Background circle -->
+    <path android:fillColor="#1A1A2E"
+        android:pathData="M0,0 L108,0 L108,108 L0,108 Z"/>
+
+    <!-- Rainbow bridge arc - blue to orange -->
+    <!-- Outer arc blue -->
+    <path android:fillColor="#1565C0"
+        android:pathData="M18,62 Q54,10 90,62 Q90,56 86,54 Q54,16 22,54 Q18,56 18,62 Z"/>
+    <!-- Outer arc cyan -->
+    <path android:fillColor="#0288D1"
+        android:pathData="M22,62 Q54,16 86,62 Q86,57 83,55 Q54,20 25,55 Q22,57 22,62 Z"/>
+    <!-- Outer arc green -->
+    <path android:fillColor="#2E7D32"
+        android:pathData="M25,62 Q54,20 83,62 Q83,58 80,57 Q54,24 28,57 Q25,58 25,62 Z"/>
+    <!-- Outer arc orange -->
+    <path android:fillColor="#E65100"
+        android:pathData="M28,62 Q54,24 80,62 Q80,60 77,59 Q54,28 31,59 Q28,60 28,62 Z"/>
+
+    <!-- Dots on top of arc -->
+    <path android:fillColor="#1565C0"  android:pathData="M32,38 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0"/>
+    <path android:fillColor="#0288D1"  android:pathData="M42,30 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0"/>
+    <path android:fillColor="#43A047"  android:pathData="M54,27 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0"/>
+    <path android:fillColor="#FB8C00"  android:pathData="M66,30 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0"/>
+    <path android:fillColor="#E53935"  android:pathData="M76,38 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0"/>
+
+    <!-- Blue speech bubble (left) -->
+    <path android:fillColor="#1E88E5"
+        android:pathData="M30,50 Q30,44 36,44 L50,44 Q56,44 56,50 L56,58 Q56,64 50,64 L40,64 L36,68 L36,64 Q30,64 30,58 Z"/>
+    <!-- Waveform in blue bubble -->
+    <path android:fillColor="#FFFFFF" android:strokeWidth="0"
+        android:pathData="M35,54 L35,54 M37,51 L37,57 M39,53 L39,55 M41,50 L41,58 M43,52 L43,56 M45,51 L45,57 M47,53 L47,55 M49,54 L49,54"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M35,53.5 L35,54.5 L37,51 L37,57 L39,53 L39,55 L41,50 L41,58 L43,52 L43,56 L45,51 L45,57 L47,53 L47,55 L49,53.5 L49,54.5 Z"/>
+
+    <!-- Orange speech bubble (right) -->
+    <path android:fillColor="#FB8C00"
+        android:pathData="M52,50 Q52,44 58,44 L72,44 Q78,44 78,50 L78,58 Q78,64 72,64 L66,64 L62,68 L62,64 Q52,64 52,58 Z"/>
+    <!-- Waveform in orange bubble -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M57,53.5 L57,54.5 L59,51 L59,57 L61,53 L61,55 L63,50 L63,58 L65,52 L65,56 L67,51 L67,57 L69,53 L69,55 L71,53.5 L71,54.5 Z"/>
+
+</vector>

@@ -1,0 +1,8 @@
+*.onnx
+build/
+*.iml
+local.properties
+app/src/main/assets/model/
+app/src/main/assets/model-hi/
+app/src/main/assets/*.json
+translation_build/

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">भाषाब्रिज V3</string>
+
+    <!-- Main screen labels -->
+    <string name="label_english">अंग्रेज़ी</string>
+    <string name="label_hindi">हिंदी</string>
+    <string name="lang_english">अंग्रेज़ी</string>
+    <string name="lang_hindi">हिंदी</string>
+    <string name="speech_mode">वाक् मोड</string>
+
+    <!-- Input hints -->
+    <string name="hint_english">अंग्रेज़ी में टाइप करें या बोलें…</string>
+    <string name="hint_hindi">हिंदी में बोलें या टाइप करें…</string>
+
+    <!-- Status messages -->
+    <string name="status_hold_mic">बोलने के लिए माइक दबाएं</string>
+    <string name="status_hold_mic_hindi">हिंदी में बोलने के लिए माइक दबाएं</string>
+    <string name="status_listening">सुन रहा हूँ…</string>
+    <string name="status_processing">प्रोसेस हो रहा है…</string>
+    <string name="status_translating">अनुवाद हो रहा है…</string>
+    <string name="status_type_hindi">ऊपर हिंदी टाइप करें, फिर अनुवाद करें</string>
+    <string name="status_loading_hi_en">HI→EN मॉडल लोड हो रहा है…</string>
+    <string name="status_ready_swap">तैयार — स्वैप फिर से दबाएं</string>
+
+    <!-- Output placeholder -->
+    <string name="output_placeholder">अनुवाद यहाँ दिखेगा…</string>
+    <string name="output_failed">अनुवाद विफल</string>
+    <string name="output_model_not_ready">HI→EN मॉडल तैयार नहीं</string>
+
+    <!-- Buttons -->
+    <string name="btn_translate">अनुवाद करें</string>
+    <string name="btn_emergency">🆘  आपातकालीन वाक्य</string>
+    <string name="btn_close">✕  बंद करें</string>
+    <string name="btn_speak_again">🔊  फिर से बोलें</string>
+    <string name="btn_settings">⚙ भाषा</string>
+
+    <!-- Loading screen -->
+    <string name="loading_title">भाषाब्रिज V3</string>
+    <string name="loading_subtitle">ऑफ़लाइन वाक् अनुवाद</string>
+    <string name="loading_initialising">मॉडल लोड हो रहे हैं…</string>
+    <string name="loading_speech_model">वाक् मॉडल लोड हो रहा है…</string>
+    <string name="loading_ai_model">AI मॉडल लोड हो रहा है…</string>
+    <string name="loading_ready">तैयार!</string>
+
+    <!-- Settings -->
+    <string name="settings_language_title">ऐप भाषा</string>
+    <string name="settings_language_message">इंटरफेस के लिए अपनी पसंदीदा भाषा चुनें</string>
+    <string name="settings_english">English</string>
+    <string name="settings_hindi">हिंदी</string>
+</resources>

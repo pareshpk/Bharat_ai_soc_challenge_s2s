@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BhashaBridge V3.4</string>
+
+    <!-- Main screen labels -->
+    <string name="label_english">ENGLISH</string>
+    <string name="label_hindi">HINDI</string>
+    <string name="lang_english">English</string>
+    <string name="lang_hindi">Hindi</string>
+    <string name="speech_mode">SPEECH MODE</string>
+
+    <!-- Input hints -->
+    <string name="hint_english">Type or speak in English…</string>
+    <string name="hint_hindi">Type or speak in Hindi…</string>
+
+    <!-- Status messages -->
+    <string name="status_hold_mic">Hold mic to speak</string>
+    <string name="status_hold_mic_hindi">Hold mic to speak in Hindi</string>
+    <string name="status_listening">Listening…</string>
+    <string name="status_processing">Processing…</string>
+    <string name="status_translating">Translating…</string>
+    <string name="status_type_hindi">Type Hindi above, then tap Translate</string>
+    <string name="status_loading_hi_en">Loading HI→EN model…</string>
+    <string name="status_ready_swap">Ready — tap swap again</string>
+
+    <!-- Output placeholder -->
+    <string name="output_placeholder">Translation appears here…</string>
+    <string name="output_failed">Translation failed</string>
+    <string name="output_model_not_ready">HI→EN model not ready</string>
+
+    <!-- Buttons -->
+    <string name="btn_translate">Translate</string>
+    <string name="btn_emergency">🆘  EMERGENCY PHRASES</string>
+    <string name="btn_close">✕  Close</string>
+    <string name="btn_speak_again">🔊  SPEAK AGAIN</string>
+    <string name="btn_settings">⚙ Language</string>
+
+    <!-- Loading screen -->
+    <string name="loading_title">BhashaBridge V3.4</string>
+    <string name="loading_subtitle">Offline Speech Translation</string>
+    <string name="loading_initialising">Initialising models…</string>
+    <string name="loading_speech_model">Loading speech model…</string>
+    <string name="loading_ai_model">Loading AI model…</string>
+    <string name="loading_ready">Ready!</string>
+
+    <!-- Settings -->
+    <string name="settings_language_title">App Language</string>
+    <string name="settings_language_message">Choose your preferred language for the interface</string>
+    <string name="settings_english">English</string>
+    <string name="settings_hindi">हिंदी</string>
+</resources>

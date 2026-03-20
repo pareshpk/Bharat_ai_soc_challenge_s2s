@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D0D0D">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#0D0D0D">
+
+        <!-- ── Title row with menu button ── -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <Button android:id="@+id/menuBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="&#9776;"
+                android:textColor="#AAAAAA"
+                android:textSize="18sp"
+                android:background="@null"
+                android:padding="0dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp" />
+
+            <ImageView
+                android:id="@+id/appTitle"
+                android:layout_width="220dp"
+                android:layout_height="48dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/logo_bhashabridge"
+                android:scaleType="fitCenter"
+                android:contentDescription="BhashaBridge" />
+            
+
+        </RelativeLayout>
+
+        <View android:id="@+id/titleAccent"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/circle_accent"
+            android:layout_marginTop="4dp" />
+
+        <!-- ── Language bar ── -->
+        <LinearLayout android:id="@+id/langBar"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_lang_bar"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical">
+
+            <TextView android:id="@+id/langSrc"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="English"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center" />
+
+            <ImageButton android:id="@+id/swapBtn"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_swap"
+                android:background="@drawable/bg_swap_btn"
+                android:tint="#6EE7B7"
+                android:contentDescription="Swap languages" />
+
+            <TextView android:id="@+id/langTgt"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Hindi"
+                android:textColor="#6EE7B7"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <!-- ── Input label ── -->
+        <TextView android:id="@+id/labelEnglish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ENGLISH"
+            android:textColor="#6EE7B7"
+            android:textSize="11sp"
+            android:letterSpacing="0.12"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp" />
+
+        <!-- ── Input box ── -->
+        <androidx.cardview.widget.CardView android:id="@+id/cardInput"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="6dp"
+            app:cardBackgroundColor="#1A1A1A"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp">
+            <EditText android:id="@+id/inputText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Type or speak in English..."
+                android:textColorHint="#444444"
+                android:textColor="#EEEEEE"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-light"
+                android:lineSpacingMultiplier="1.4"
+                android:background="@null"
+                android:padding="14dp"
+                android:gravity="top|start"
+                android:inputType="textMultiLine|textCapSentences"
+                android:maxLines="4" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- ── ASR hint ── -->
+        <TextView android:id="@+id/asrHintText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#555555"
+            android:textSize="11sp"
+            android:fontFamily="sans-serif"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="2dp"
+            android:visibility="gone" />
+
+        <!-- ── Translate button ── -->
+        <Button android:id="@+id/translateButton"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Translate"
+            android:textColor="#0D0D0D"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.06"
+            android:fontFamily="sans-serif-medium"
+            android:background="@drawable/bg_translate_btn"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp" />
+
+        <!-- ── Output label ── -->
+        <TextView android:id="@+id/labelHindi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HINDI"
+            android:textColor="#6EE7B7"
+            android:textSize="11sp"
+            android:letterSpacing="0.12"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="8dp" />
+
+        <!-- ── Output box — weight=1 takes all remaining vertical space ── -->
+        <androidx.cardview.widget.CardView android:id="@+id/cardOutput"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="4dp"
+            app:cardBackgroundColor="#141E1A"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp">
+            <TextView android:id="@+id/outputText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Translation appears here..."
+                android:textColor="#2D4A3E"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-light"
+                android:lineSpacingMultiplier="1.5"
+                android:padding="14dp"
+                android:gravity="top|start" />
+        </androidx.cardview.widget.CardView>
+        <TextView
+            android:id="@+id/ttsStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#FF6B6B"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:visibility="gone" />
+
+        <!-- ── Divider ── -->
+        <View android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1E1E1E" />
+
+        <!-- ── Speech section — fixed at bottom, compact ── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingBottom="8dp">
+
+            <TextView android:id="@+id/speechModeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="SPEECH MODE"
+                android:textColor="#555555"
+                android:textSize="10sp"
+                android:letterSpacing="0.16"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginTop="6dp" />
+
+            <com.example.bhashabridge_v3_4.WaveformView android:id="@+id/waveformView"
+                android:layout_width="160dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:visibility="invisible"
+                android:layout_marginTop="2dp" />
+
+            <!-- Mic button row -->
+            <FrameLayout
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="2dp">
+                <View android:id="@+id/micPulse"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:background="@drawable/bg_mic_pulse"
+                    android:visibility="invisible" />
+                <ImageButton android:id="@+id/micButton"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_mic"
+                    android:background="@drawable/bg_mic_btn"
+                    android:tint="#0D0D0D"
+                    android:contentDescription="Hold to speak"
+                    android:elevation="4dp"
+                    android:enabled="false" />
+            </FrameLayout>
+
+            <TextView android:id="@+id/micStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Tap mic to speak"
+                android:textColor="#555555"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif"
+                android:layout_marginTop="4dp" />
+
+            <!-- ── Emergency + bottom action row ── -->
+            <Button android:id="@+id/emergencyButton"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="🆘  EMERGENCY PHRASES"
+                android:textColor="#FF4444"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:fontFamily="sans-serif-medium"
+                android:background="@drawable/bg_emergency_btn"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="6dp" />
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- LOADING OVERLAY                                               -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <FrameLayout android:id="@+id/loadingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#0D0D0D"
+        android:elevation="10dp"
+        android:visibility="visible">
+        <LinearLayout
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/loadingTitle"
+                android:layout_width="240dp"
+                android:layout_height="52dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/logo_bhashabridge"
+                android:scaleType="fitCenter"
+                android:layout_marginBottom="6dp"
+                android:contentDescription="BhashaBridge" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Offline Speech Translation"
+                android:textColor="#3A3A3A"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif"
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="36dp" />
+
+            <TextView android:id="@+id/loadingStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Initialising models..."
+                android:textColor="#6EE7B7"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif"
+                android:layout_marginBottom="20dp" />
+
+            <ProgressBar android:id="@+id/loadingProgress"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="220dp"
+                android:layout_height="3dp"
+                android:indeterminate="true"
+                android:progressTint="#6EE7B7"
+                android:indeterminateTint="#6EE7B7"
+                android:layout_marginBottom="24dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <View android:id="@+id/dot1"
+                    android:layout_width="7dp" android:layout_height="7dp"
+                    android:background="@drawable/circle_accent"
+                    android:layout_marginEnd="8dp" android:alpha="1.0" />
+                <View android:id="@+id/dot2"
+                    android:layout_width="7dp" android:layout_height="7dp"
+                    android:background="@drawable/circle_accent"
+                    android:layout_marginEnd="8dp" android:alpha="0.3" />
+                <View android:id="@+id/dot3"
+                    android:layout_width="7dp" android:layout_height="7dp"
+                    android:background="@drawable/circle_accent"
+                    android:alpha="0.3" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- EMERGENCY OVERLAY                                             -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <FrameLayout android:id="@+id/emergencyOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#EE0D0D0D"
+        android:elevation="20dp"
+        android:visibility="gone">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:orientation="horizontal"
+                android:background="#1A0000"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="8dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="🆘  Emergency Phrases"
+                    android:textColor="#FF4444"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium" />
+                <Button android:id="@+id/emergencyClose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="✕  Close"
+                    android:textColor="#AAAAAA"
+                    android:textSize="13sp"
+                    android:background="@null"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp" />
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/categoryTabs"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:background="#110000"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp">
+                <TextView android:id="@+id/tabBasic"
+                    android:layout_width="0dp" android:layout_height="match_parent"
+                    android:layout_weight="1" android:text="🆘 Basic"
+                    android:textColor="#FF6666" android:textSize="11sp"
+                    android:gravity="center" android:background="@drawable/bg_tab_selected" />
+                <TextView android:id="@+id/tabMedical"
+                    android:layout_width="0dp" android:layout_height="match_parent"
+                    android:layout_weight="1" android:text="🏥 Medical"
+                    android:textColor="#888888" android:textSize="11sp"
+                    android:gravity="center" />
+                <TextView android:id="@+id/tabSafety"
+                    android:layout_width="0dp" android:layout_height="match_parent"
+                    android:layout_weight="1" android:text="🚨 Safety"
+                    android:textColor="#888888" android:textSize="11sp"
+                    android:gravity="center" />
+                <TextView android:id="@+id/tabLocation"
+                    android:layout_width="0dp" android:layout_height="match_parent"
+                    android:layout_weight="1" android:text="📍 Location"
+                    android:textColor="#888888" android:textSize="11sp"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView android:id="@+id/phraseList"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#0D0D0D"
+                android:clipToPadding="false"
+                android:paddingTop="4dp"
+                android:paddingBottom="8dp" />
+
+            <LinearLayout android:id="@+id/selectedPhrasePanel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#1A0000"
+                android:padding="14dp"
+                android:visibility="gone">
+                <TextView android:id="@+id/selectedEnglish"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#EEEEEE"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif"
+                    android:layout_marginBottom="4dp" />
+                <TextView android:id="@+id/selectedHindi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF6666"
+                    android:textSize="22sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginBottom="10dp" />
+                <Button android:id="@+id/speakPhraseBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:text="🔊  SPEAK AGAIN"
+                    android:textColor="#0D0D0D"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_emergency_btn_solid" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>
+
+    <!-- Left drawer panel -->
+    <LinearLayout
+        android:id="@+id/drawerPanel"
+        android:layout_width="260dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:orientation="vertical"
+        android:background="#111111"
+        android:paddingTop="48dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BhashaBridge"
+            android:textColor="#6EE7B7"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginLeft="24dp"
+            android:layout_marginBottom="32dp" />
+
+        <TextView android:id="@+id/trayHistory"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="   History"
+            android:textColor="#EEEEEE"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center_vertical"
+            android:paddingLeft="24dp"
+            android:background="?attr/selectableItemBackground" />
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#2A2A2A" android:layout_marginLeft="24dp" />
+
+        <TextView android:id="@+id/trayAudio"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="   Import Audio"
+            android:textColor="#EEEEEE"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center_vertical"
+            android:paddingLeft="24dp"
+            android:background="?attr/selectableItemBackground" />
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#2A2A2A" android:layout_marginLeft="24dp" />
+
+        <TextView android:id="@+id/trayLanguage"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="   Language"
+            android:textColor="#EEEEEE"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center_vertical"
+            android:paddingLeft="24dp"
+            android:background="?attr/selectableItemBackground" />
+
+    </LinearLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark background palette -->
+    <color name="bg_primary">#0D0D0D</color>
+    <color name="bg_card">#1A1A1A</color>
+    <color name="bg_card_output">#141E1A</color>
+    <color name="bg_surface">#252525</color>
+    <color name="divider">#1E1E1E</color>
+
+    <!-- Text -->
+    <color name="text_primary">#EEEEEE</color>
+    <color name="text_secondary">#888888</color>
+    <color name="text_hint">#444444</color>
+    <color name="text_disabled">#333333</color>
+
+    <!-- Accent — emerald green -->
+    <color name="accent">#6EE7B7</color>
+    <color name="accent_pressed">#4ACA96</color>
+    <color name="accent_dim">#1E4A3A</color>
+    <color name="accent_on">#0D0D0D</color>
+
+    <!-- Status / nav bar -->
+    <color name="status_bar">#0D0D0D</color>
+</resources>
